@@ -1,9 +1,15 @@
 using System;
 
-namespace SmartSchool.WebAPI.Dtos
+namespace SmartSchool.WebAPI.V2.Dtos
 {
+    /// <summary>
+    /// Esse � o DTO de Aluno para registrar.
+    /// </summary>
     public class AlunoRegisterDto
     {
+        /// <summary>
+        /// Identificador da tabela de Aluno.
+        /// </summary>
         public int Id { get; set; }
         public int Matricula { get; set; }
         public string Nome { get; set; }

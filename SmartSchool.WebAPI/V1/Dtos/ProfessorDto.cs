@@ -1,16 +1,14 @@
 using System;
 
-namespace SmartSchool.WebAPI.Dtos
+namespace SmartSchool.WebAPI.V1.Dtos
 {
-    public class ProfessorRegisterDto
+    public class ProfessorDto
     {
         public int Id { get; set; }
         public int Registro { get; set; }
         public string Nome { get; set; }
-        public string Sobrenome { get; set; }
         public int Telefone { get; set; }
-        public DateTime DataIni { get; set; } = DateTime.Now;
-        public DateTime? DataFim { get; set; } = null;
+        public DateTime DataIni { get; set; }
         public bool Ativo { get; set; } = true;
     }
 }

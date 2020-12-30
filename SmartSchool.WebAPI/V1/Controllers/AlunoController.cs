@@ -4,24 +4,37 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.WebAPI.Data;
-using SmartSchool.WebAPI.Dtos;
+using SmartSchool.WebAPI.V1.Dtos;
 using SmartSchool.WebAPI.Models;
 
-namespace SmartSchool.WebAPI.Controllers
+namespace SmartSchool.WebAPI.V1.Controllers
 {
+    /// <summary>
+    /// Versão 1 do meu controlador de Aluno
+    /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AlunoController : ControllerBase
     {
         private readonly IRepository _repo;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <param name="mapper"></param>
         public AlunoController(IRepository repo, IMapper mapper)
         {
             _mapper = mapper;
             _repo = repo;
         }
 
+        /// <summary>
+        /// Método responsável por obter todos os alunos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
@@ -30,12 +43,21 @@ namespace SmartSchool.WebAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<AlunoDto>>(alunos));
         }
 
+        /// <summary>
+        /// Método responsável por retornar um AlunoRegisterDto
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("GetRegister")]
         public IActionResult GetRegister()
         {
             return Ok(new AlunoRegisterDto());
         }
 
+        /// <summary>
+        /// Métodos responsável por retornar apenas um aluno pelo Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // [HttpGet("{id:int}")]
         //[HttpGet("{id}")]
         [HttpGet("{id}")]
@@ -59,6 +81,12 @@ namespace SmartSchool.WebAPI.Controllers
         //     return Ok(aluno);
         // }
 
+
+        /// <summary>
+        /// Métodos responsável por incluir um aluno
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Post(AlunoRegisterDto model)
         {
@@ -72,6 +100,12 @@ namespace SmartSchool.WebAPI.Controllers
             return BadRequest("Aluno não cadastrado!");
         }
 
+        /// <summary>
+        /// Métodos responsável por retornar atualizar um aluno
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Put(int id, AlunoRegisterDto model)
         {
@@ -88,6 +122,12 @@ namespace SmartSchool.WebAPI.Controllers
             return BadRequest("Aluno não atualizado!");
         }
 
+        /// <summary>
+        /// Métodos responsável por retornar atualizar um aluno
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, AlunoRegisterDto model)
         {
@@ -104,6 +144,11 @@ namespace SmartSchool.WebAPI.Controllers
             return BadRequest("Aluno não atualizado!");
         }
 
+        /// <summary>
+        /// Métodos responsável por deletar um aluno pelo id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
