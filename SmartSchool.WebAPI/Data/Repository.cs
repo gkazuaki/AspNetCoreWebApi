@@ -1,5 +1,7 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SmartSchool.WebAPI.Helper;
 using SmartSchool.WebAPI.Models;
 
 namespace SmartSchool.WebAPI.Data
@@ -29,6 +31,47 @@ namespace SmartSchool.WebAPI.Data
         public bool SaveChanges()
         {
             return(_context.SaveChanges() > 0);
+        }
+
+        public async Task<PageList<Aluno>> GetAllAlunosAsync(PageParams pageParams, bool includeDisciplina = false)
+        {
+            IQueryable<Aluno> query = _context.Alunos;
+
+            if(includeDisciplina)
+            {
+                query = query.Include(a => a.AlunosDisciplinas)
+                    .ThenInclude(ad => ad.Disciplina)
+                    .ThenInclude(p => p.Professor);
+            }
+
+            query = query.AsNoTracking().OrderBy(a => a.Id);
+
+            if (!string.IsNullOrEmpty(pageParams.Nome))
+            {
+                query = query.Where(aluno => aluno.Nome.ToUpper().Contains(pageParams.Nome.ToUpper()) ||
+                                             aluno.Sobrenome.ToUpper().Contains(pageParams.Nome.ToUpper()));
+            }
+
+            if (pageParams.Matricula != null)
+                query = query.Where(aluno => aluno.Matricula == pageParams.Matricula);
+
+            if (pageParams.Ativo != null)
+                query = query.Where(aluno => aluno.Ativo == (pageParams.Ativo != 0));
+
+            if (!string.IsNullOrEmpty(pageParams.Ordenacao))
+            {
+                if (pageParams.Ordenacao.Contains("Id"))
+                    query = query.OrderBy(aluno => aluno.Id);
+
+                if (pageParams.Ordenacao.Contains("Nome"))
+                    query = query.OrderBy(aluno => aluno.Nome);
+
+                if (pageParams.Ordenacao.Contains("Matricula"))
+                    query = query.OrderBy(aluno => aluno.Matricula);
+            }
+            
+            //return await query.ToArrayAsync();
+            return await PageList<Aluno>.CreateAsync(query, pageParams.PageNumber, pageParams.PageSize);
         }
 
         public Aluno[] GetAllAlunos(bool includeDisciplina = false)
